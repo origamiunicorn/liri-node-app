@@ -2,15 +2,18 @@ require("dotenv").config();
 
 var axios = require("axios");
 var moment = require('moment');
-moment().format();
+var fs = require("fs");
+var keys = require("./keys.js");
 
 var searchVariable = process.argv[3];
 
-var keys = require("./keys.js");
+
 // var spotify = new Spotify(keys.spotify);
 
 if (process.argv[2] === "concert-this") {
-    console.log(`${process.argv[3]}'s upcoming events.`);
+    console.log(`${process.argv[3]}'s upcoming events.
+    `);
+    searchBandsInTown(searchVariable);
 } else if (process.argv[2] === "spotify-this-song") {
     console.log(`Spotify this song, "${process.argv[3]}."`);
 } else if (process.argv[2] === "movie-this") {
@@ -31,14 +34,20 @@ if (process.argv[2] === "concert-this") {
 
 function searchBandsInTown(artist) {
 
-    var queryURL = "https://rest.bandsintown.com/artists/" + "cher" + "/events?app_id=codingbootcamp";
+    var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
 
     axios
         .get(queryURL)
         .then(function (response) {
-            console.log(response.venue.name);
-            console.log(response.venue.city, response.venue.region);
-            console.log(moment(response.datetime, "MM/DD/YYY"));
+            // console.log(response);
+            console.log(`Next ten upcoming shows by ${artist}:`)
+            for (let i = 0; i < 10; i++) {
+
+                console.log(`Venue: ${response.data[i].venue.name}
+Location: ${response.data[i].venue.city}, ${response.data[i].venue.region}
+Date: ${moment(response.data[i].datetime).format("MM/DD/YYYY")}
+                `);
+            }
         })
         .catch(function (error) {
             if (error.response) {
