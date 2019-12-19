@@ -1,53 +1,85 @@
 require("dotenv").config();
 
-var axios = require("axios");
-var moment = require('moment');
-var fs = require("fs");
-var keys = require("./keys.js");
+const axios = require("axios");
+const moment = require('moment');
+const fs = require("fs");
+const keys = require("./keys.js");
 
-var searchVariable = process.argv[3];
+const [node, file, action, ...args] = process.argv;
+console.log(node);
+console.log(file);
+console.log(action);
+console.log(args);
 
+const searchVariable = args.join(" ");
+const actionTaken = action;
 
 // var spotify = new Spotify(keys.spotify);
 
-if (process.argv[2] === "concert-this") {
-    console.log(`${process.argv[3]}'s upcoming events.
-    `);
-    searchBandsInTown(searchVariable);
-} else if (process.argv[2] === "spotify-this-song") {
-    console.log(`Spotify this song, "${process.argv[3]}."`);
-} else if (process.argv[2] === "movie-this") {
-    console.log(`Search for information on the movie titled ${process.argv[3]}.`);
-} else if (process.argv[2] === "do-what-it-says") {
-    console.log(`Do what it says.`);
-} else {
-    console.log(`Please use one of the four available commands. They are as follows:
-    concert-this <artist>
-    spotify-this-song <song title>
-    movie-this <movie title>
-    do-what-it-says`)
-};
+// if (action === "concert-this") {
+//     console.log(`${searchVariable}'s upcoming events.
+//     `);
+//     searchBandsInTown(searchVariable);
+// } else if (action === "spotify-this-song") {
+//     console.log(`Spotify this song, "${process.argv[3]}."`);
+// } else if (action === "movie-this") {
+//     console.log(`Search for information on the movie titled ${process.argv[3]}.`);
+// } else if (action === "do-what-it-says") {
+//     console.log(`Do what it says.`);
+// } else {
+//     console.log(`Please use one of the four available commands. They are as follows:
+//     concert-this <artist>
+//     spotify-this-song <song title>
+//     movie-this <movie title>
+//     do-what-it-says`)
+// };
 
-// Name of the venue
-// Venue location
-// Date of the Event (use moment to format this as "MM/DD/YYYY")
+switch (actionTaken) {
+    case "concert-this":
+        console.log(`${searchVariable}'s upcoming events.
+`);
+        searchBandsInTown(searchVariable);
+        break;
+    case "spotify-this-song":
+        console.log(`Spotify this song, "${searchVariable}."`);
+        break;
+    case "movie-this":
+        console.log(`Search for information on the movie titled ${searchVariable}.`);
+        break;
+    case "do-what-it-says":
+        console.log(`Do what it says.`);
+        break;
+    default:
+        console.log(`Please use one of the four available commands. They are as follows:
+  concert-this <artist>
+  spotify-this-song <song title>
+  movie-this <movie title>
+  do-what-it-says`)
+        break;
+}
 
 function searchBandsInTown(artist) {
 
-    var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
+    let queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
 
     axios
         .get(queryURL)
         .then(function (response) {
             // console.log(response);
-            console.log(`Next ten upcoming shows by ${artist}:`)
-            for (let i = 0; i < 10; i++) {
+            if (response.data.length === 0) {
+                console.log(`There are no upcoming shows by ${artist} visible on Bands In Town.`)
+            } else {
+                console.log(`Upcoming shows by ${artist}:
+`)
+            }
 
+            for (let i = 0; i < response.data.length; i++) {
                 console.log(`Venue: ${response.data[i].venue.name}
 Location: ${response.data[i].venue.city}, ${response.data[i].venue.region}
 Date: ${moment(response.data[i].datetime).format("MM/DD/YYYY")}
-                `);
+`);
             }
+
         })
         .catch(function (error) {
             if (error.response) {
