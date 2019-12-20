@@ -13,26 +13,26 @@ let [node, file, action, ...args] = process.argv;
 let searchVariable = args.join(" ");
 let actionTaken = action;
 
+printToLog(`
+---
+
+${actionTaken} ${searchVariable}`);
+
 switch (actionTaken) {
     case "concert-this":
-        fs.appendFile("./sample.txt", "concert-this " + searchVariable + "\n", function (err) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("Content Added!");
-            }
-
-        });
+        console.log(`Searching for upcoming events featuring ${searchVariable}`);
         searchBandsInTown(searchVariable);
         break;
     case "spotify-this-song":
         if (searchVariable !== "") {
             console.log(`Searching Spotify for a song called, "${searchVariable}."`);
+            printToLog(`
+spotify-this-song ${searchVariable}`);
             searchVariable.split(" ").join("+");
             searchSpotifyAPI(searchVariable);
         } else {
             searchVariable = "track:the+sign+artist:ace+of+base";
-            console.log(`Searching Spotify for a song called, "${searchVariable}."`);
+            console.log(`Searching Spotify for a song called, "The Sign."`);
             searchSpotifyAPI(searchVariable);
         }
         break;
@@ -65,22 +65,38 @@ function doTheThing() {
         actionTaken = dataArr[0];
         searchVariable = dataArr[1];
 
-        switch (actionTaken) {
-            case "concert-this":
-                searchBandsInTown(searchVariable);
-                break;
-            case "spotify-this-song":
-                console.log(`Spotify this song, "${searchVariable}."`);
-                searchSpotifyAPI();
-                break;
-            case "movie-this":
-                console.log(`Searching for information on a movie titled ${searchVariable}.`);
-                searchVariable.split(" ").join("+");
-                searchMovies(searchVariable, "");
-                break;
-        };
+        doAllTheThings(actionTaken, searchVariable);
     });
 };
+
+function doAllTheThings(actionTaken, searchVariable) {
+    switch (actionTaken) {
+        case "concert-this":
+            printToLog(`
+---`);
+            printToLog(`
+concert-this ${searchVariable}`);
+            searchBandsInTown(searchVariable);
+            break;
+        case "spotify-this-song":
+            printToLog(`
+---`);
+            printToLog(`
+spotify-this-song ${searchVariable}`);
+            console.log(`Spotify this song, "${searchVariable}."`);
+            searchSpotifyAPI(searchVariable);
+            break;
+        case "movie-this":
+            printToLog(`
+---`);
+            printToLog(`
+movie-this ${searchVariable}`);
+            console.log(`Searching for information on a movie titled ${searchVariable}.`);
+            searchVariable.split(" ").join("+");
+            searchMovies(searchVariable, "");
+            break;
+    };
+}
 
 function searchMovies(movie = "Mr. Nobody") {
 
@@ -91,7 +107,7 @@ function searchMovies(movie = "Mr. Nobody") {
         .then(
             function (response) {
                 // console.log(response)
-                console.log(`
+                let toPrint = `
 Title: ${response.data.Title}
 Release Year: ${response.data.Year}
 IMDB Rating: ${response.data.imdbRating}
@@ -99,7 +115,9 @@ Rotten Tomatoes Rating: ${response.data.Ratings[1].Value}
 Produced In: ${response.data.Country}
 Movie Language(s): ${response.data.Language}
 Plot Synopsis: ${response.data.Plot}
-Top Billing Actors: ${response.data.Actors}`);
+Top Billing Actors: ${response.data.Actors}`;
+                console.log(toPrint);
+                printToLog(toPrint);
             })
         .catch(
             function (error) {
@@ -142,11 +160,13 @@ function searchSpotifyAPI(song) {
             request.get(options, function (error, response, body) {
 
                 for (let i = 0; i < 5; i++) {
-                    console.log(`
+                    let toPrint = `
 Song: ${body.tracks.items[i].name}
 Artist: ${body.tracks.items[i].artists[0].name}
 Album: ${body.tracks.items[i].album.name}
-Preview URL: ${body.tracks.items[i].preview_url}`);
+Preview URL: ${body.tracks.items[i].preview_url}`;
+                    console.log(toPrint);
+                    printToLog(toPrint);
                 }
             });
         }
@@ -160,13 +180,16 @@ function searchBandsInTown(artist) {
     axios
         .get(queryURL)
         .then(function (response) {
-            // console.log(response);
             if (response.data.length === 0) {
-                console.log(`
-There are no upcoming shows by ${artist} visible on Bands In Town.`)
+                var toPrint = `
+There are no upcoming shows by ${artist} visible on Bands In Town API.`;
+                console.log(toPrint);
+                printToLog(toPrint);
             } else {
-                console.log(`
-Upcoming shows by ${artist}:`)
+                var toPrint = `
+Upcoming shows by ${artist}:`;
+                console.log(toPrint);
+                printToLog(toPrint);
             }
 
             for (let i = 0; i < response.data.length; i++) {
@@ -175,16 +198,8 @@ Venue: ${response.data[i].venue.name}
 Location: ${response.data[i].venue.city}, ${response.data[i].venue.region}
 Date: ${moment(response.data[i].datetime).format("MM/DD/YYYY")}`;
                 console.log(toPrint);
-
-                fs.appendFile("./sample.txt", toPrint + "\n", function (err) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        console.log("Content Added!");
-                    }
-                });
-            }
-
+                printToLog(toPrint);
+            };
         })
         .catch(function (error) {
             if (error.response) {
@@ -199,3 +214,11 @@ Date: ${moment(response.data[i].datetime).format("MM/DD/YYYY")}`;
             console.log(error.config);
         });
 };
+
+function printToLog(toPrint) {
+    fs.appendFile("./log.txt", toPrint + "\n", function (err) {
+        if (err) {
+            console.log(err);
+        };
+    });
+}
