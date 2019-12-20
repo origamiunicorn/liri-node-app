@@ -56,3 +56,5 @@ After each retrieval of information, Liri will prompt the user "Would you like L
 
 ## Features
 The use of .gitignore and .env to store keys related to the Spotify and OMDB APIs. The use of inquirer and chained promises to allow for recursive use of the runLiri() method to prompt users to confirm when they're done using Liri to search the various APIs.
+
+Moment.js was used to convert the dates of upcoming musician or band events into a MM/DD/YYYY format from the string presented in the JSON object retrieved from the Bands In Town API.
