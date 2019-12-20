@@ -1,0 +1,107 @@
+concert-thischer
+concert-this cher
+concert-this cher
+concert-this cher
+concert-this bon jovi
+concert-this backstreet boys
+concert-this backstreet boys
+
+Venue: Palacio de los Deportes
+Location: Mexico, 
+Date: 02/20/2020
+
+Venue: DNA World Tour
+Location: Mexico, 
+Date: 02/22/2020
+
+Venue: DNA World Tour
+Location: Mexico, 
+Date: 02/21/2020
+
+Venue: DNA World Tour
+Location: Obrera, 
+Date: 02/24/2020
+
+Venue: DNA World Tour
+Location: Obrera, 
+Date: 02/25/2020
+
+Venue: DNA World Tour
+Location: Tlajomulco De Zuñiga, 
+Date: 02/26/2020
+
+Venue: Anfiteatro Coca-Cola
+Location: Guácima, 
+Date: 02/28/2020
+
+Venue: Movistar Arena
+Location: Bogotá, 
+Date: 03/01/2020
+
+Venue: DNA World Tour
+Location: Bogotá, 
+Date: 03/02/2020
+
+Venue: Estadio Bicentenario de La Florida
+Location: La Florida, 
+Date: 03/04/2020
+
+Venue: Argentine Polo Association
+Location: Bwp, 
+Date: 03/07/2020
+
+Venue: DNA World Tour
+Location: La Florida, 
+Date: 03/05/2020
+
+Venue: DNA World Tour
+Location: Montevideo, 
+Date: 03/09/2020
+
+Venue: Jeunesse Arena
+Location: Rio De Janeiro, 
+Date: 03/13/2020
+
+Venue: Ginásio Municipal Tancredo Neves
+Location: Uberlândia, 
+Date: 03/11/2020
+
+Venue: Allianz Parque
+Location: Sao Paulo, 
+Date: 03/15/2020
+
+Venue: DNA World Tour
+Location: Auckland, 
+Date: 05/16/2020
+
+Venue: DNA World Tour
+Location: Boondall, 
+Date: 05/20/2020
+
+Venue: Antel Arena
+Location: Montevideo, 
+Date: 03/08/2020
+
+Venue: DNA World Tour
+Location: Auckland, 
+Date: 05/17/2020
+
+Venue: DNA World Tour
+Location: Sydney, 
+Date: 05/22/2020
+
+Venue: DNA World Tour
+Location: Melbourne, 
+Date: 05/26/2020
+
+Venue: DNA World Tour
+Location: Melbourne, 
+Date: 05/27/2020
+
+Venue: DNA World Tour
+Location: Perth, 
+Date: 05/30/2020
+
+Venue: DNA World Tour
+Location: Sydney, 
+Date: 05/23/2020

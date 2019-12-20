@@ -1,4 +1,5 @@
 require("dotenv").config();
+const inquirer = require("inquirer");
 
 const keys = require("./keys.js");
 const axios = require("axios");
@@ -18,40 +19,95 @@ printToLog(`
 
 ${actionTaken} ${searchVariable}`);
 
-switch (actionTaken) {
-    case "concert-this":
-        console.log(`Searching for upcoming events featuring ${searchVariable}`);
-        searchBandsInTown(searchVariable);
-        break;
-    case "spotify-this-song":
-        if (searchVariable !== "") {
-            console.log(`Searching Spotify for a song called, "${searchVariable}."`);
-            printToLog(`
-spotify-this-song ${searchVariable}`);
-            searchVariable.split(" ").join("+");
-            searchSpotifyAPI(searchVariable);
-        } else {
-            searchVariable = "track:the+sign+artist:ace+of+base";
-            console.log(`Searching Spotify for a song called, "The Sign."`);
-            searchSpotifyAPI(searchVariable);
+function runLiri() {
+    inquirer
+        .prompt([
+            {
+                type: "list",
+                message: "Which action would you like to take?",
+                choices: ["concert-this", "spotify-this-song", "movie-this", "do-what-it-says"],
+                name: "actionTaken"
+            }
+        ]).then(function (response) {
+
+            let searchType = response.actionTaken;
+            let actionType = "";
+            let actionDefault = "";
+
+            switch (searchType) {
+                case "concert-this":
+                    actionType = "musician or band";
+                    actionDefault = "Blink-182";
+                    break;
+                case "spotify-this-song":
+                    actionType = "song"
+                    actionDefault = "The Sign";
+                    break;
+                case "movie-this":
+                    actionType = "movie"
+                    actionDefault = "Mr. Nobody";
+                    break;
+                case "do-what-it-says":
+                    console.log(`Do what it says.`);
+                    break;
+            };
+
+            if (searchType !== "do-what-it-says") {
+                inquirer
+                    .prompt([
+                        {
+                            type: "input",
+                            message: `Give Liri a ${actionType} to find information on:`,
+                            default: `${actionDefault}`,
+                            name: "searchTerm"
+                        }
+                    ]).then(function (response) {
+
+                        let searchVariable = response.searchTerm;
+
+                        switch (actionType) {
+                            case "musician or band":
+                                console.log(`Searching for upcoming events featuring ${searchVariable}`);
+                                searchBandsInTown(searchVariable);
+                                break;
+                            case "song":
+                                console.log(`Searching Spotify for a song called, "${searchVariable}."`);
+                                if (searchVariable !== "The Sign") {
+                                    searchVariable.split(" ").join("+");
+                                    searchSpotifyAPI(searchVariable);
+                                } else {
+                                    searchVariable = "track:the+sign+artist:ace+of+base";
+                                    searchSpotifyAPI(searchVariable);
+                                };
+                                break;
+                            case "movie":
+                                console.log(`Searching for information on a movie titled ${searchVariable}.`);
+                                searchVariable.split(" ").join("+");
+                                searchMovies(searchVariable, "");
+                                break;
+                        };
+                    })
+            } else {
+                doTheThing();
+            };
+        });
+};
+
+function searchAgain() {
+    inquirer.prompt([
+        {
+            type: "confirm",
+            message: `Would you like Liri to perform another search?`,
+            name: "searchAgain",
+            default: false
         }
-        break;
-    case "movie-this":
-        console.log(`Searching for information on a movie titled ${searchVariable}.`);
-        searchVariable.split(" ").join("+");
-        searchMovies(searchVariable, "");
-        break;
-    case "do-what-it-says":
-        console.log(`Do what it says.`);
-        doTheThing();
-        break;
-    default:
-        console.log(`Please use one of the four available commands. They are as follows:
-  concert-this <artist>
-  spotify-this-song <song title>
-  movie-this <movie title>
-  do-what-it-says`)
-        break;
+    ]).then(function (response) {
+        if (response.searchAgain === true) {
+            runLiri();
+        } else {
+            return;
+        }
+    });
 };
 
 function doTheThing() {
@@ -70,27 +126,17 @@ function doTheThing() {
 };
 
 function doAllTheThings(actionTaken, searchVariable) {
+    printToLog(`
+${actionTaken} ${searchVariable}`);
     switch (actionTaken) {
         case "concert-this":
-            printToLog(`
----`);
-            printToLog(`
-concert-this ${searchVariable}`);
             searchBandsInTown(searchVariable);
             break;
         case "spotify-this-song":
-            printToLog(`
----`);
-            printToLog(`
-spotify-this-song ${searchVariable}`);
-            console.log(`Spotify this song, "${searchVariable}."`);
+            console.log(`Spotify this song, ${searchVariable}.`);
             searchSpotifyAPI(searchVariable);
             break;
         case "movie-this":
-            printToLog(`
----`);
-            printToLog(`
-movie-this ${searchVariable}`);
             console.log(`Searching for information on a movie titled ${searchVariable}.`);
             searchVariable.split(" ").join("+");
             searchMovies(searchVariable, "");
@@ -98,7 +144,7 @@ movie-this ${searchVariable}`);
     };
 }
 
-function searchMovies(movie = "Mr. Nobody") {
+function searchMovies(movie) {
 
     let queryURL = "http://www.omdbapi.com/?t=" + movie + "&y=$&plot=short&apikey=" + keys.omdb.id;
 
@@ -106,7 +152,6 @@ function searchMovies(movie = "Mr. Nobody") {
         .get(queryURL)
         .then(
             function (response) {
-                // console.log(response)
                 let toPrint = `
 Title: ${response.data.Title}
 Release Year: ${response.data.Year}
@@ -116,9 +161,11 @@ Produced In: ${response.data.Country}
 Movie Language(s): ${response.data.Language}
 Plot Synopsis: ${response.data.Plot}
 Top Billing Actors: ${response.data.Actors}`;
-                console.log(toPrint);
+                console.log(toPrint, "\n");
                 printToLog(toPrint);
-            })
+                searchAgain();
+            }
+        )
         .catch(
             function (error) {
                 if (error.response) {
@@ -131,7 +178,8 @@ Top Billing Actors: ${response.data.Actors}`;
                     console.log("Error", error.message);
                 }
                 console.log(error.config);
-            });
+            }
+        );
 }
 
 function searchSpotifyAPI(song) {
@@ -158,7 +206,6 @@ function searchSpotifyAPI(song) {
                 json: true
             };
             request.get(options, function (error, response, body) {
-
                 for (let i = 0; i < 5; i++) {
                     let toPrint = `
 Song: ${body.tracks.items[i].name}
@@ -167,7 +214,9 @@ Album: ${body.tracks.items[i].album.name}
 Preview URL: ${body.tracks.items[i].preview_url}`;
                     console.log(toPrint);
                     printToLog(toPrint);
-                }
+                };
+                console.log("\n");
+                searchAgain();
             });
         }
     });
@@ -190,9 +239,9 @@ There are no upcoming shows by ${artist} visible on Bands In Town API.`;
 Upcoming shows by ${artist}:`;
                 console.log(toPrint);
                 printToLog(toPrint);
-            }
+            };
 
-            for (let i = 0; i < response.data.length; i++) {
+            for (let i = 0; i < response.data.length && i < 5; i++) {
                 var toPrint = `
 Venue: ${response.data[i].venue.name}
 Location: ${response.data[i].venue.city}, ${response.data[i].venue.region}
@@ -200,6 +249,8 @@ Date: ${moment(response.data[i].datetime).format("MM/DD/YYYY")}`;
                 console.log(toPrint);
                 printToLog(toPrint);
             };
+            console.log("\n");
+            searchAgain();
         })
         .catch(function (error) {
             if (error.response) {
@@ -210,7 +261,7 @@ Date: ${moment(response.data[i].datetime).format("MM/DD/YYYY")}`;
                 console.log(error.request);
             } else {
                 console.log("Error", error.message);
-            }
+            };
             console.log(error.config);
         });
 };
@@ -221,4 +272,6 @@ function printToLog(toPrint) {
             console.log(err);
         };
     });
-}
+};
+
+runLiri();
