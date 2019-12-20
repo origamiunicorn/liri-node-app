@@ -50,9 +50,9 @@ After each retrieval of information, Liri will prompt the user "Would you like L
 * request
 
 ## APIs Used
-* Bands In Town API
-* OMDB API
-* Spotify API
+* [Bands In Town API](https://app.swaggerhub.com/apis-docs/Bandsintown/PublicAPI/3.0.0)
+* [OMDB API](http://www.omdbapi.com/)
+* [Spotify API](https://developer.spotify.com/documentation/web-api/)
 
 ## Features
 The use of .gitignore and .env to store keys related to the Spotify and OMDB APIs. The use of inquirer and chained promises to allow for recursive use of the runLiri() method to prompt users to confirm when they're done using Liri to search the various APIs.
