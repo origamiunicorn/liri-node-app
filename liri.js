@@ -15,6 +15,14 @@ let actionTaken = action;
 
 switch (actionTaken) {
     case "concert-this":
+        fs.appendFile("./sample.txt", "concert-this " + searchVariable + "\n", function (err) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("Content Added!");
+            }
+
+        });
         searchBandsInTown(searchVariable);
         break;
     case "spotify-this-song":
@@ -108,8 +116,8 @@ Top Billing Actors: ${response.data.Actors}`);
             });
 }
 
-function searchSpotifyAPI(song = "The Sign") {
-    var authOptions = {
+function searchSpotifyAPI(song) {
+    const authOptions = {
         url: 'https://accounts.spotify.com/api/token',
         headers: {
             'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
@@ -123,8 +131,8 @@ function searchSpotifyAPI(song = "The Sign") {
     request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
 
-            var token = body.access_token;
-            var options = {
+            let token = body.access_token;
+            let options = {
                 url: 'https://api.spotify.com/v1/search?q=' + song + '&offset=0&limit=5&type=track',
                 headers: {
                     'Authorization': 'Bearer ' + token
@@ -162,10 +170,19 @@ Upcoming shows by ${artist}:`)
             }
 
             for (let i = 0; i < response.data.length; i++) {
-                console.log(`
+                var toPrint = `
 Venue: ${response.data[i].venue.name}
 Location: ${response.data[i].venue.city}, ${response.data[i].venue.region}
-Date: ${moment(response.data[i].datetime).format("MM/DD/YYYY")}`);
+Date: ${moment(response.data[i].datetime).format("MM/DD/YYYY")}`;
+                console.log(toPrint);
+
+                fs.appendFile("./sample.txt", toPrint + "\n", function (err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("Content Added!");
+                    }
+                });
             }
 
         })
