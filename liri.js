@@ -215,7 +215,7 @@ Preview URL: ${body.tracks.items[i].preview_url}`;
                     console.log(toPrint);
                     printToLog(toPrint);
                 };
-                console.log("\n");
+                console.log("\r");
                 searchAgain();
             });
         }
@@ -249,7 +249,7 @@ Date: ${moment(response.data[i].datetime).format("MM/DD/YYYY")}`;
                 console.log(toPrint);
                 printToLog(toPrint);
             };
-            console.log("\n");
+            console.log("\r");
             searchAgain();
         })
         .catch(function (error) {
