@@ -17,6 +17,7 @@ Originally, these were all command line inputs, but after going back and restruc
 Upon load, users will be provided with a list. Using the arrow keys to navigate the list, they may select one of the four options listed above.
 
 * ```concert-this``` uses the Bands in Town API in order to retrieve information about a musician or band's upcoming performances. It will list up to five upcoming performances related to the musician or band input, and will display a console.log of "There are no upcoming shows by Conjure One visible on Bands In Town API." if no performances are found. Information will be displayed as follows:
+
     * Venue: Venue of Performance
     * Location: City and Region where the Venue is located
     * Date: Date of the Performance
