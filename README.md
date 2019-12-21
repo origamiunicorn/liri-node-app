@@ -18,27 +18,27 @@ Upon load, users will be provided with a list. Using the arrow keys to navigate 
 
 * ```concert-this``` uses the Bands in Town API in order to retrieve information about a musician or band's upcoming performances. It will list up to five upcoming performances related to the musician or band input, and will display a console.log of "There are no upcoming shows by Conjure One visible on Bands In Town API." if no performances are found. Information will be displayed as follows:
 
-    * Venue: Venue of Performance
-    * Location: City and Region where the Venue is located
-    * Date: Date of the Performance
+    * __Venue:__ Venue of Performance
+    * __Location:__ City and Region where the Venue is located
+    * __Date:__ Date of the Performance
 
 ![alt text](https://i.imgur.com/mB93FE2.png "Words Here")
 
 * ```spotify-this-song``` uses the Spotify API in order to retrieve up to five songs related to an input search term. It will return the following information:
-    * Song: Song Title
-    * Artist: Song Artist(s) or Band
-    * Album: Album the song was contained within
-    * Preview URL: A preview URL from Spotify for this song
+    * __Song:__ Song Title
+    * __Artist:__ Song Artist(s) or Band
+    * __Album:__ Album the song was contained within
+    * __Preview URL:__ A preview URL from Spotify for this song
 
 * ```movie-this``` uses the OMDB API in order to retrieve information from one film most closely matching the input search term. It will return the following information: 
-    * Title: Title of the movie
-    * Release Year: The year in which the movie was released
-    * IMDB Rating: The movie's rating on [IMDB.com](https://www.imdb.com/)
-    * Rotten Tomatoes Rating: The movie's rating on [RottenTomatoes.com](https://www.rottentomatoes.com/)
-    * Produced In: Country or countries in which the movie was produced
-    * Movie Language(s): Languages the movie has audio tracks/dubbing for
-    * Plot Synposis: The movie's short plot synopsis
-    * Top Billing Actors: The top billing actors in the movie
+    * __Title:__ Title of the movie
+    * __Release Year:__ The year in which the movie was released
+    * __IMDB Rating:__ The movie's rating on [IMDB.com](https://www.imdb.com/)
+    * __Rotten Tomatoes Rating:__ The movie's rating on [RottenTomatoes.com](https://www.rottentomatoes.com/)
+    * __Produced In:__ Country or countries in which the movie was produced
+    * __Movie Language(s):__ Languages the movie has audio tracks/dubbing for
+    * __Plot Synposis:__ The movie's short plot synopsis
+    * __Top Billing Actors:__ The top billing actors in the movie
 
 * ```do-what-it-says``` reads the contents of the file ```random.txt```, splits that data into an array, then takes those pieces of the new array and passes them into a function to perform the written search, be it ```concert-this```, ```spotify-this-song```, or ```movie-this```. The given default for the file is ```spotify-this-song,"I want it that way"```. The information will display in the format of information for any ```spotify-this-song``` selection.
 
@@ -57,13 +57,13 @@ After each retrieval of information, Liri will prompt the user "Would you like L
 * JavaScript
 
 ## Libraries, Packages, and Tools Used
-* Moment.js
 * Node.js
-* inquirer npm
 * axios npm
 * dotenv npm
 * fs npm
-* request
+* inquirer npm
+* moment npm
+* request npm
 
 ## APIs Used
 * [Bands In Town API](https://app.swaggerhub.com/apis-docs/Bandsintown/PublicAPI/3.0.0)
